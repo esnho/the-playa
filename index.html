@@ -7,91 +7,97 @@
 
 <script type="text/javascript">
 
-let sound;
+let sound; // this will be the howler instance
 const basses = []; // the bass array, is empty, will be filled automatically below
 const drums = []; // the drums array, same as above
-const spriteMap = {};
 const nowplaying = document.getElementById("nowplaying");
-const soundTags = [
-  "bass",
-  "drum",
-]
+let config = {};
 
 window.onload = () => letsbegin();
 
 function letsbegin() {
-  for (let soundName in audioSprites.spritemap) {
-    if (soundName.indexOf("bass") >= 0) { // if the name contains the word bass
-      basses.push(soundName);
-    } else { // is a drum!
-      drums.push(soundName);
-    }
-    const title = document.createElement("p");
-    title.id = soundName;
-    title.innerHTML = soundName;
-    nowplaying.appendChild(title);
-    spriteMap[soundName] = [
-      Math.round(audioSprites.spritemap[soundName].start * 1000),
-      Math.round(audioSprites.spritemap[soundName].end * 1000),
-    ]
-  }
-  const sprites = {
-    src: audioSprites.resources,
-    sprite: spriteMap,
-  }
-  console.log(sprites);
-  sound = new Howl(sprites);
-  sound.autoSuspend = false;
-  play = true;
-  document.getElementById("stop-button").onclick = () => {
-    sound.stop();
-    play = false;
-  }
-  document.getElementById("play-button").onclick = () => {
-
-    let time = 0;
-    let bid = undefined;
-    let did = undefined;
-
-    play = true;
-
-    const loop = () => {
-      if (!play) return;
-      const curtime = window.performance.now();
-      if (curtime - time < 4000) {
-        // nuttin
-      } else {
-        time = window.performance.now();
-        const bass = basses[Math.ceil(Math.random()*basses.length-1)];
-        const drum = drums[Math.ceil(Math.random()*drums.length-1)];
-        if (bid !== undefined && did !== undefined) {
-          sound.stop(bid);
-          sound.stop(did);
-        }
-        bid = sound.play(bass);
-        did = sound.play(drum);
-        console.log(
-          "loop",
-          bass,
-          bid,
-          drum,
-          did,
-        );
-        nowplaying.childNodes.forEach((title) => {
-          console.log(title.id);
-          if (title.id === bass || title.id === drum) {
-            title.style.color = "red";
-          } else {
-            title.style.color = "black";
-          }
-        })
+  getSprites()
+  .then((audioSprites) => {
+    console.log("audioSprites",audioSprites)
+    for (let soundName in audioSprites.sprite) {
+      if (soundName.indexOf("bass") >= 0) { // if the name contains the word bass
+        basses.push(soundName);
+      } else { // is a drum!
+        drums.push(soundName);
       }
-      window.requestAnimationFrame(loop);
+      const title = document.createElement("p");
+      title.id = soundName;
+      title.innerHTML = soundName;
+      nowplaying.appendChild(title);
     }
-    loop();
-  }
+    sound = new Howl(audioSprites);
+    sound.autoSuspend = false;
+    play = true;
+    document.getElementById("stop-button").onclick = () => {
+      sound.stop();
+      play = false;
+    }
+    document.getElementById("play-button").onclick = () => {
+
+      let time = 0;
+      let bid = undefined;
+      let did = undefined;
+
+      play = true;
+
+      const loop = () => {
+        if (!play) return;
+        const curtime = window.performance.now();
+        if (curtime - time < 4000) {
+          // nuttin
+        } else {
+          time = window.performance.now();
+          const bass = basses[Math.ceil(Math.random()*basses.length-1)];
+          const drum = drums[Math.ceil(Math.random()*drums.length-1)];
+          if (bid !== undefined && did !== undefined) {
+            sound.stop(bid);
+            sound.stop(did);
+          }
+          bid = sound.play(bass);
+          did = sound.play(drum);
+          console.log(
+            "loop",
+            bass,
+            bid,
+            drum,
+            did,
+          );
+          nowplaying.childNodes.forEach((title) => {
+            console.log(title.id);
+            if (title.id === bass || title.id === drum) {
+              title.style.color = "red";
+            } else {
+              title.style.color = "black";
+            }
+          })
+        }
+        window.requestAnimationFrame(loop);
+      }
+      loop();
+    }
+  });
+  
 }
 
+function getSprites() {
+  return fetch(window.origin + "/config.json")
+  .then((body) => {
+    return body.json();
+  })
+  .then((json) => {
+    config = json;
+    return fetch(window.origin+"/"+config.filename);
+  })
+  .then((body) => {
+    return body.json();
+  })
+}
+/* 
 const audioSprites = {
   "resources": [
     "audio/mygameaudio.ogg",
@@ -136,7 +142,7 @@ const audioSprites = {
       "loop": false
     }
   }
-};
+}; */
 </script>
 
 <!--
