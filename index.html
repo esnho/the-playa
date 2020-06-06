@@ -1,5 +1,6 @@
 <h1>The playa</h1>
 <button id="play-button">PLAY!</button>
+<button id="stop-button">STOP </button>
 <div id="nowplaying"></div>
 <!-- download the audio library <3 -->
 <script src="https://cdn.jsdelivr.net/npm/howler@2.2.0/dist/howler.min.js"></script>
@@ -11,8 +12,11 @@ const basses = []; // the bass array, is empty, will be filled automatically bel
 const drums = []; // the drums array, same as above
 const spriteMap = {};
 const nowplaying = document.getElementById("nowplaying");
+const soundTags = [
+  "bass",
+  "drum",
+]
 
-// when the window is ready execute what is written in letsbegin()
 window.onload = () => letsbegin();
 
 function letsbegin() {
@@ -27,8 +31,8 @@ function letsbegin() {
     title.innerHTML = soundName;
     nowplaying.appendChild(title);
     spriteMap[soundName] = [
-      audioSprites.spritemap[soundName].start * 1000,
-      audioSprites.spritemap[soundName].end * 1000,
+      Math.round(audioSprites.spritemap[soundName].start * 1000),
+      Math.round(audioSprites.spritemap[soundName].end * 1000),
     ]
   }
   const sprites = {
@@ -37,13 +41,22 @@ function letsbegin() {
   }
   console.log(sprites);
   sound = new Howl(sprites);
+  sound.autoSuspend = false;
+  play = true;
+  document.getElementById("stop-button").onclick = () => {
+    sound.stop();
+    play = false;
+  }
   document.getElementById("play-button").onclick = () => {
 
     let time = 0;
     let bid = undefined;
     let did = undefined;
 
+    play = true;
+
     const loop = () => {
+      if (!play) return;
       const curtime = window.performance.now();
       if (curtime - time < 4000) {
         // nuttin
@@ -73,44 +86,9 @@ function letsbegin() {
           }
         })
       }
-      // window.requestAnimationFrame(loop);
+      window.requestAnimationFrame(loop);
     }
-    //loop();
-
-    const nowPlayingUpdate = (p = {
-      bass:undefined,
-      drum:undefined
-    }) => {
-      nowplaying.childNodes.forEach((title) => {
-        if ((p.bass && title.id === p.bass) || (p.drum && title.id === p.drum)) {
-          title.style.color = "red";
-        } else {
-          title.style.color = "black";
-        }
-      })
-    }
-
-    const infiniteBass = () => {
-      const bass = basses[Math.ceil(Math.random()*basses.length-1)];
-      const id = sound.play(bass);
-      console.log("bass",bass,id);
-      nowPlayingUpdate({bass});
-      sound.on('end', function() {
-        infiniteBass();
-      }, id);
-    }
-
-    const infiniteDrum = () => {
-      const drum = drums[Math.ceil(Math.random()*drums.length-1)];
-      const id = sound.play(drum);
-      console.log("drum",drum,id);
-      nowPlayingUpdate({drum});
-      sound.on('end', function() {
-        infiniteDrum();
-      }, id);
-    }
-    infiniteBass();
-    infiniteDrum();
+    loop();
   }
 }
 
