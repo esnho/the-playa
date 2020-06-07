@@ -28,6 +28,7 @@ function letsbegin() {
     }
     document.getElementById("play-button").onclick = () => {
       let time = 0;
+      let firstTime = true;
       let bid = undefined;
       let did = undefined;
 
@@ -36,9 +37,10 @@ function letsbegin() {
       const loop = () => {
         if (!play) return;
         const curtime = window.performance.now();
-        if (curtime - time < 4000) {
+        if (curtime - time < 4000 && !firstTime) {
           // nuttin
         } else {
+          firstTime = false;
           time = window.performance.now();
           const nowPlaying = [];
           for (let instrumentName in instruments) {
