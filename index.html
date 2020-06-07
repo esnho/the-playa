@@ -100,7 +100,20 @@ function setupGUI(audioSprites) {
     const title = document.createElement("p");
     title.id = soundName;
     title.innerHTML = soundName;
-    nowplaying.appendChild(title);
+    for (let instrument of config.instruments) {
+      if (soundName.indexOf(instrument) >= 0) {
+        let instrumentContainer = document.getElementById(instrument)
+        if (!instrumentContainer) {
+          instrumentContainer = document.createElement('div');
+          instrumentContainer.id = instrument;
+          const instrumentTitle = document.createElement('h2');
+          instrumentTitle.innerHTML = instrument;
+          instrumentContainer.appendChild(instrumentTitle);
+          nowplaying.appendChild(instrumentContainer);
+        }
+        instrumentContainer.appendChild(title);
+      }
+    }
   }
 }
 
