@@ -37,7 +37,7 @@ function letsbegin() {
       const loop = () => {
         if (!play) return;
         const curtime = window.performance.now();
-        if (curtime - time < 4000 && !firstTime) {
+        if (curtime - time < config.spriteLenghtMS && !firstTime) {
           // nuttin
         } else {
           firstTime = false;

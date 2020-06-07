@@ -3,5 +3,6 @@
   "instruments": [
     "_BASS_",
     "_DRUM_"
-  ]
+  ],
+  "spriteLenghtMS": 4000
 }
