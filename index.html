@@ -8,28 +8,17 @@
 <script type="text/javascript">
 
 let sound; // this will be the howler instance
-const basses = []; // the bass array, is empty, will be filled automatically below
-const drums = []; // the drums array, same as above
 const nowplaying = document.getElementById("nowplaying");
 let config = {};
+let instruments = {};
 
 window.onload = () => letsbegin();
-
 function letsbegin() {
-  getSprites()
-  .then((audioSprites) => {
+  getSprites().then((audioSprites) => {
     console.log("audioSprites",audioSprites)
-    for (let soundName in audioSprites.sprite) {
-      if (soundName.indexOf("bass") >= 0) { // if the name contains the word bass
-        basses.push(soundName);
-      } else { // is a drum!
-        drums.push(soundName);
-      }
-      const title = document.createElement("p");
-      title.id = soundName;
-      title.innerHTML = soundName;
-      nowplaying.appendChild(title);
-    }
+    addSoundsToList(audioSprites);
+    console.log("instruments",instruments);
+    setupGUI(audioSprites);
     sound = new Howl(audioSprites);
     sound.autoSuspend = false;
     play = true;
@@ -38,7 +27,6 @@ function letsbegin() {
       play = false;
     }
     document.getElementById("play-button").onclick = () => {
-
       let time = 0;
       let bid = undefined;
       let did = undefined;
@@ -52,24 +40,21 @@ function letsbegin() {
           // nuttin
         } else {
           time = window.performance.now();
-          const bass = basses[Math.ceil(Math.random()*basses.length-1)];
-          const drum = drums[Math.ceil(Math.random()*drums.length-1)];
-          if (bid !== undefined && did !== undefined) {
-            sound.stop(bid);
-            sound.stop(did);
+          const nowPlaying = [];
+          for (let instrumentName in instruments) {
+            const instrument = instruments[instrumentName];
+            console.log(instrument);
+            const newInstrumentID = Math.ceil(Math.random()*instrument.name.length-1);
+            const newInstrumentName = instrument.name[newInstrumentID];
+            if (instrument.playID !== undefined) {
+              sound.stop(instrument.playID);
+            }
+            instrument.playID = sound.play(newInstrumentName);
+            nowPlaying.push(newInstrumentName);
           }
-          bid = sound.play(bass);
-          did = sound.play(drum);
-          console.log(
-            "loop",
-            bass,
-            bid,
-            drum,
-            did,
-          );
+          console.log("nowPlaying",JSON.stringify(nowPlaying));
           nowplaying.childNodes.forEach((title) => {
-            console.log(title.id);
-            if (title.id === bass || title.id === drum) {
+            if (nowPlaying.includes(title.id)) {
               title.style.color = "red";
             } else {
               title.style.color = "black";
@@ -81,7 +66,6 @@ function letsbegin() {
       loop();
     }
   });
-  
 }
 
 function getSprites() {
@@ -97,6 +81,29 @@ function getSprites() {
     return body.json();
   })
 }
+
+function addSoundsToList(audioSprites) {
+  for (let soundName in audioSprites.sprite) {
+    for (let instrument of config.instruments) {
+      if (soundName.indexOf(instrument) >= 0) {
+        if (!instruments[instrument]) {
+          instruments[instrument] = { playID: undefined, name: []};
+        }
+        instruments[instrument].name.push(soundName);
+      }
+    }
+  }
+}
+
+function setupGUI(audioSprites) {
+  for (let soundName in audioSprites.sprite) {
+    const title = document.createElement("p");
+    title.id = soundName;
+    title.innerHTML = soundName;
+    nowplaying.appendChild(title);
+  }
+}
+
 </script>
 
 <!--
