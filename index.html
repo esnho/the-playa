@@ -69,13 +69,13 @@ function letsbegin() {
 }
 
 function getSprites() {
-  return fetch(window.origin + "/config.json")
+  return fetch(window.location.href + "/config.json")
   .then((body) => {
     return body.json();
   })
   .then((json) => {
     config = json;
-    return fetch(window.origin+"/"+config.filename);
+    return fetch(window.location.href + "/" + config.filename);
   })
   .then((body) => {
     return body.json();
