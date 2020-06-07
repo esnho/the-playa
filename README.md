@@ -16,7 +16,7 @@ brew install ffmpeg
 npm install -g audiosprite
 ```
 
-### Execute the script!
+### Run the script!
 
 Now you'll be able to run `convertAudio.sh` and convert folders and folders of samples into sprites.
 
