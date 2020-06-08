@@ -1,17 +1,57 @@
-# Prerequisites
+# Info
 
 The Playa works with WebAudio leveraging on [Howler](https://github.com/goldfire/howler.js) using a technique called [Audio Sprites](https://howlerjs.com/#sprite), this ensure that the audio can be reproduced on devices that can't reproduce more than one file simultaneously.
 This technique is similar to its Computer Graphic counterpart, a single file contains multiple tracks and metadata describe when a track begins and its lenght.
 
-# Prepare audio for The Playa
+# Use The Playa on your local machine
+
+Clone or download this repository.
+
+The software is intentionally kept as simple as possible.
+
+Open a Terminal, navigate to project folder, launch a webserver and visit it from a browser.
+
+For example from a Mac is possible to launch a webserver with this command:
+
+```
+python -m SimpleHTTPServer 8080
+```
+
+Then visit `http://localhost:8080` from your browser.
+
+## Prepare audio for The Playa
 
 To prepare an audio track that can be reproduced as sprite is necessary some assistance, the project contains a script (only Mac and Linux) that use [Audiosprite](https://github.com/tonistiigi/audiosprite) to compose tracks in a single file and saves its metadata. Audiosprite uses ffmpeg and convert the audio track in multiple formats to ensure compatibility across many devices and browsers.
 
-Before using the script is necessary to install Audiosprite, on Mac open a terminal and execute these commands:
+Before using the script is necessary to install Audiosprite, Audiosprite depends on ffmpeg and is written in Node.js, to install ffmpeg is strongly suggested to use Brew, to install AudioSprite will be necessary to install Node.js, is possible to install Node.js using Brew.
+
+### Install Brew
+
+To install [Brew](https://brew.sh/index_it) open a Terminal and execute
+
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+```
+
+### Install Node.JS
+
+On Mac open a terminal and execute these commands:
+
+```
+brew update
+brew install node@10
+```
+
+### Install ffmpeg
+
+On Mac open a terminal and execute these commands:
 
 ```
 brew install ffmpeg
 ```
+
+### Install Audiosprite (finally 😭)
+
 ```
 npm install -g audiosprite
 ```
@@ -46,24 +86,8 @@ When I convert files I execute this command:
 ./convertAudio.sh ./SAMPLESWAP the-playa-demo
 ```
 
-### Naming convention
+### [IMPORTANT] Naming convention
 
 The player does not know your folder structure, to keep audio samples organized in multitrack is necessary to define tags in `config.json` file and use those tags to name your samples, this example uses `_BASS_` and `_DRUM_`, check `config.json` and samples in `SAMPLESWAP` to understand better what's going on.
 
 Is possible to add more tags to `config.json` in order to add new tracks to multitrack player The Playa.
-
-# Use The Playa on your local machine
-
-Clone or download this repository.
-
-The software is intentionally kept as simple as possible.
-
-Open a Terminal, navigate to project folder, launch a webserver and visit it from a browser.
-
-For example from a Mac is possible to launch a webserver with this command:
-
-```
-python -m SimpleHTTPServer 8080
-```
-
-Then visit `http://localhost:8080` from your browser.
