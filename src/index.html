@@ -1,0 +1,37 @@
+<html>
+<head>
+
+  <!-- download the audio library <3 -->
+  <script src="https://cdn.jsdelivr.net/npm/howler@2.2.0/dist/howler.min.js"></script>
+  <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.140.2/build/three.module.js"
+      }
+    }
+  </script>
+
+</head>
+<body>
+  <h1>The playa</h1>
+  <button id="play-button" style="font-size: 3em;padding:.5em;">PLAY!</button>
+  <button id="stop-button" style="font-size: 3em;padding:.5em;">STOP </button>
+  <div id="nowplaying"></div>
+
+  <canvas id="draw-canvas" style="width: 500px; height: 500px" width="500" height="500"></canvas>
+
+  <script src="./audioplayer.js"></script>
+  <script type="module" src="./viz.js"></script>
+
+  <!--
+  convertire i file in sprites con https://github.com/tonistiigi/audiosprite // TODO scrivere how-to
+  caricare gli sprites generati da questo file
+  fare play di più sprite contemporanieamente mantenendo separati i tipi di file
+  ogni volta che finisce uno sprite deve riprodurre un altro sprite dello stesso genere
+  ascoltare la musica kwertchosa
+
+  -->
+</body>
+</html>
