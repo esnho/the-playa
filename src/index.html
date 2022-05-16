@@ -16,11 +16,27 @@
 </head>
 <body>
   <h1>The playa</h1>
-  <button id="play-button" style="font-size: 3em;padding:.5em;">PLAY!</button>
-  <button id="stop-button" style="font-size: 3em;padding:.5em;">STOP </button>
-  <div id="nowplaying"></div>
+  <button id="play-button" style="
+    font-size: 3em;
+    color: white;
+    background: none;
+    border: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  ">PLAY!</button>
+  <div id="nowplaying" style="color: white"></div>
 
-  <canvas id="draw-canvas" style="width: 500px; height: 500px" width="500" height="500"></canvas>
+  <canvas id="draw-canvas" style="
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -10;
+    width: 100vw;
+    height: 100vh;
+  " width="500" height="500"></canvas>
 
   <script src="./audioplayer.js"></script>
   <script type="module" src="./viz.js"></script>

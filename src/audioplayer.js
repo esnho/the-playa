@@ -1,5 +1,6 @@
 let sound; // this will be the howler instance
 const nowplaying = document.getElementById("nowplaying");
+const playButton = document.getElementById("play-button");
 let config = {};
 let instruments = {};
 
@@ -13,11 +14,7 @@ function letsbegin() {
     sound = new Howl(audioSprites);
     console.log("sound", sound);
     sound.autoSuspend = false;
-    play = true;
-    document.getElementById("stop-button").onclick = () => {
-      sound.stop();
-      play = false;
-    }
+    play = false;
 
     window.analyser = Howler.ctx.createAnalyser();
     Howler.masterGain.connect(analyser);
@@ -26,11 +23,20 @@ function letsbegin() {
     window.bufferLength = analyser.frequencyBinCount;
     window.dataArray = new Uint8Array(window.bufferLength);
 
-    document.getElementById("play-button").onclick = () => {
+    const stopAudio = () => {
+      sound.stop();
+      for (let instrumentName in instruments) {
+        document.getElementById(instrumentName).childNodes.forEach((title) => {
+          title.style.color = "inherit";
+        });
+      }
+      play = false;
+      playButton.innerText = "PLAY!";
+    }
+
+    const playAudio = () => {
       let time = 0;
       let firstTime = true;
-      let bid = undefined;
-      let did = undefined;
 
       play = true;
 
@@ -57,7 +63,7 @@ function letsbegin() {
               if (nowPlaying.includes(title.id)) {
                 title.style.color = "red";
               } else {
-                title.style.color = "black";
+                title.style.color = "inherit";
               }
             });
           }
@@ -66,7 +72,14 @@ function letsbegin() {
         window.requestAnimationFrame(loop);
       }
       loop();
+      playButton.innerText = "";
     }
+
+    playButton.onclick = () => {
+      if (!play) return playAudio();
+
+      stopAudio();
+    };
   });
 }
 

@@ -1,25 +1,39 @@
 const canvas = document.getElementById("draw-canvas");
 const ctx = canvas.getContext('2d');
 
-const WIDTH = 500;
-const HEIGHT = 500;
-
-// timinds
-let now = 0;
-let then = Date.now();
-const fpsInterval = 1000 / 20;
-
 // draw constants
+let WIDTH = 500;
+let HEIGHT = 500;
 const center = {
   x: WIDTH * 0.5,
   y: HEIGHT * 0.5,
 };
-const radius = WIDTH * 0.25;
+let radius = WIDTH * 0.25;
 const amplitude = 1;
+
+const updateSize = () => {
+  WIDTH = canvas.clientWidth;
+  HEIGHT = canvas.clientHeight;
+  canvas.width = WIDTH;
+  canvas.height = HEIGHT;
+
+  radius = Math.min(WIDTH, HEIGHT) * 0.25;
+
+  center.x = WIDTH * 0.5;
+  center.y = HEIGHT * 0.5;
+}
+
+updateSize();
+
+window.addEventListener('resize', updateSize);
+
+// timings
+let now = 0;
+let then = Date.now();
+const fpsInterval = 1000 / 20;
 
 let offset = 0;
 let offsetSpeed = 0.02;
-
 
 const draw = () => {
   // calc elapsed time since last loop
